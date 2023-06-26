@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Learning DSD Driver - Courses</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="top-header">
+        <header>
+            <nav>
+                <div class="logo">
+                    <img src="images/logoRehrig.png" alt="logoRehrig" class="logo-img">
+                    <img src="images/logoCOP.png" alt="logoCOP" class="logo-img2">
+                </div>
+                <!-- Navigation menu -->
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="courses.html">Courses</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="#signin" class="btn" id="form-open">Login</a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+
+    <!-- Top hero -->
+    <section class="course-hero-section">
+        <div class="course-hero-box">
+            <div class="course-left-box">
+                <p class="future">Bright Your Future</p><br>Education is the best way to Grow p 
+            </div>
+            <div class="course-right-box">
+                <img src="images/students.webp" alt="header images" class="course-right-img">
+            </div>
+        </div>
+    </section>
+
+    <section class="course-section">
+        <div class="course-container"></div>
+
+        <!-- Course elements will be dynamically generated here -->
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Your E-Learning Platform. All rights reserved.</p>
+    </footer>
+
+    <script>
+        fetch('courses.json')
+            .then(response => response.json())
+            .then(courses => {
+                const courseContainer = document.querySelector('.course-container');
+
+                courses.forEach(course => {
+                    const courseElement = document.createElement('div');
+                    courseElement.classList.add('course');
+
+                    const imageContainer = document.createElement('div');
+                    imageContainer.classList.add('image-container');
+                    courseElement.appendChild(imageContainer);
+
+                    // Extract video ID from YouTube URL
+                    const videoId = getYouTubeVideoId(course.url);
+
+                    // Create image element with the YouTube thumbnail
+                    const imageElement = document.createElement('img');
+                    imageElement.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                    imageElement.classList.add('cropped'); // Add CSS class to the image
+                    imageContainer.appendChild(imageElement);
+
+                courseElement.appendChild(imageContainer);
+
+                    const textContainer = document.createElement('div');
+                    textContainer.classList.add('text-container');
+                    courseElement.appendChild(textContainer);
+
+                    const titleElement = document.createElement('h3');
+                    titleElement.textContent = course.title;
+                    textContainer.appendChild(titleElement);
+
+                    const descriptionElement = document.createElement('p');
+                    descriptionElement.textContent = course.description;
+                    textContainer.appendChild(descriptionElement);
+
+                    const enrollLink = document.createElement('a');
+                    enrollLink.href = course.url;
+                    enrollLink.textContent = 'Get Started';
+                    enrollLink.classList.add('enroll-button'); // Add the class 'enroll-button'
+                    textContainer.appendChild(enrollLink);
+
+                    courseContainer.appendChild(courseElement);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching course data:', error);
+            });
+
+        // Function to extract YouTube video ID from URL
+        function getYouTubeVideoId(url) {
+            const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=))([^\/\n\s&?]+)/i;
+            const match = url.match(videoIdRegex);
+            return match && match[1];
+        }
+
+    </script>
+
+</body>
+
+</html>
